@@ -118,8 +118,7 @@ nvidia/cuda:13.0.1-cudnn-devel-ubuntu24.04
 ```
 FROM pytorch/pytorch:2.9.0-cuda12.8-cudnn9-devel
  
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y ffmpeg libsm6 libxext6 software-properties-common
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y ffmpeg libsm6 libxext6 software-properties-common
  
 RUN pip install causal-conv1d
  
@@ -183,13 +182,13 @@ kill -l [exitstatus]
 FATAL:   While performing build: while running engine: exit status 1
 ```
 
-6. Assuming you opened an interactive session, run the `apptainer_module.sh` file with `. ./apptainer_env.sh`. Then run the command,
+6. Assuming you opened an interactive session, run the `apptainer_module.sh` file with `. ./apptainer_module.sh`. Then run the command,
 ```
 apptainer build <your_container_name>.sif <your_def_file_name>.def
 ```
 Now you have created the container .sif file
 
-Run the command `apptainer shell --no-mount hostfs --containall --workdir apptainer_workdir --bind .:/mountedFolder --bind ./fakehome:/home/$USER/ --pwd /mountedFolder <yor_sif_file_name>.sif` to go inside the Apptainer. 
+7. Create a file `<your_shell_run_file_name>.sh`. Add `apptainer shell --no-mount hostfs --containall --workdir apptainer_workdir --bind .:/mountedFolder --bind ./fakehome:/home/$USER/ --pwd /mountedFolder <yor_sif_file_name>.sif` to the file. Go inside the Apptainer by running `. ./<your_shell_run_file_name>.sh`.
 
 If you run `ls`, you can see all the folders and files in the working directory. Also, if you need to install any other package, you can easily download it by `pip install`. Also, for a repo with a setup.py file, you can simply navigate to the folder while you are inside the Apptainer and install it. 
 
@@ -218,9 +217,7 @@ Bootstrap: docker
 From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 Stage: spython-base
 %post
-apt-get update && \
-
-DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip ffmpeg libsm6 libxext6 libc6-dev libglx0 software-properties-common
+apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip ffmpeg libsm6 libxext6 libc6-dev libglx0 software-properties-common
 
 pip install --upgrade pip setuptools wheel
 pip install packaging
