@@ -141,11 +141,20 @@ docker build -t new_custom_img:pytorch-2.9.0-python11.4 .
 
 ## Setup Apptainer Container in Spartan
 
-1. Navigate to the working directory of Punim project folder. Then, upload your repository or clone a repository from GitHub using git. 
+1. Navigate to your working directory of the Punim project folder.
+2. Upload your repository or clone a repository from GitHub using git clone <repository_link>. 
 
-2. Create two folders called `fakehome` and `apptainer_workdir`. 
+3. Create two folders called `fakehome` and `apptainer_workdir`:
+   ```
+   mkdir fakehome && mkdir apptainer_workdir
+   ``` 
 
-3. Create a file named `apptainer_container.def`. Add the following to the file. 
+4. Create a file named `apptainer_container.def`:
+   ```
+   touch apptainer_container.def
+   ```
+   
+6. Add the following to the file (see example section below for a complete variant): 
 ```
 Bootstrap: docker
 From: <original_container_name_used_in_Dockerfile>
@@ -161,7 +170,13 @@ export PATH="/home/<your spartan username> /.local:$PATH"
 ```
 sinteractive -p interactive --time=7-0:0:0 --cpus-per-task=8 --mem=128G
 ```
-5. Then you need to do a few things in the Spartan. I would recommend creating a file called `apptainer_module.sh` with the following content
+
+5. Create a shell script called `apptainer_module.sh`:
+   ```
+   touch apptainer_module.sh
+   ```
+   
+7. Edit apptainer_module.sh and copy/paste the following into it:
 ```
 #!/bin/bash
 module --force purge
@@ -182,13 +197,27 @@ kill -l [exitstatus]
 FATAL:   While performing build: while running engine: exit status 1
 ```
 
-6. Assuming you opened an interactive session, run the `apptainer_module.sh` file with `. ./apptainer_module.sh`. Then run the command,
+6. After running the interactive session (make sure you are definitely in an interactive session or admin will send you an angry email), run the `apptainer_module.sh` file as follows:
+   ```
+   . ./apptainer_module.sh
+   ```
+   
+8. Run the command:
 ```
 apptainer build <your_container_name>.sif <your_def_file_name>.def
 ```
-Now you have created the container .sif file
 
-7. Create a file `<your_shell_run_file_name>.sh`. Add `apptainer shell --no-mount hostfs --containall --workdir apptainer_workdir --bind .:/mountedFolder --bind ./fakehome:/home/$USER/ --pwd /mountedFolder <yor_sif_file_name>.sif` to the file. Go inside the Apptainer by running `. ./<your_shell_run_file_name>.sh`.
+Now you have created the container .sif file!
+
+7. Create a file `<your_shell_run_file_name>.sh`:
+   ```
+   touch example_name.sh
+   ```
+   
+9. Add the following to your `<your_shell_run_file_name>.sh` bash script:
+   ```
+   apptainer shell --no-mount hostfs --containall --workdir apptainer_workdir --bind .:/mountedFolder --bind ./fakehome:/home/$USER/ --pwd /mountedFolder <yor_sif_file_name>.sif` to the file. Go inside the Apptainer by running `. ./<your_shell_run_file_name>.sh`
+   ```
 
 If you run `ls`, you can see all the folders and files in the working directory. Also, if you need to install any other package, you can easily download it by `pip install`. Also, for a repo with a setup.py file, you can simply navigate to the folder while you are inside the Apptainer and install it. 
 
