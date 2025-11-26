@@ -216,8 +216,9 @@ Now you have created the container .sif file!
    
 9. Add the following to your `<your_shell_run_file_name>.sh` bash script:
    ```
-   apptainer shell --no-mount hostfs --containall --workdir apptainer_workdir --bind .:/mountedFolder --bind ./fakehome:/home/$USER/ --pwd /mountedFolder <yor_sif_file_name>.sif` to the file. Go inside the Apptainer by running `. ./<your_shell_run_file_name>.sh`
+   apptainer shell --no-mount hostfs --containall --workdir apptainer_workdir --bind .:/mountedFolder --bind ./fakehome:/home/$USER/ --pwd /mountedFolder <yor_sif_file_name>.sif
    ```
+   Go inside the Apptainer by running `. ./<your_shell_run_file_name>.sh`
 
 If you run `ls`, you can see all the folders and files in the working directory. Also, if you need to install any other package, you can easily download it by `pip install`. Also, for a repo with a setup.py file, you can simply navigate to the folder while you are inside the Apptainer and install it. 
 
